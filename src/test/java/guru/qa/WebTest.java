@@ -1,65 +1,66 @@
 package guru.qa;
 
-import com.codeborne.selenide.Condition;
-import com.codeborne.selenide.Selenide;
-import com.codeborne.selenide.SelenideElement;
-import com.codeborne.selenide.WebDriverRunner;
+import com.codeborne.selenide.*;
 import guru.qa.domain.MenuItem;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.*;
 
 import java.util.List;
 import java.util.stream.Stream;
 
+import static com.codeborne.selenide.Condition.text;
 import static com.codeborne.selenide.Condition.visible;
 import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.$$;
+import com.codeborne.selenide.Configuration;
+import com.codeborne.selenide.Selenide;
 
 
 public class WebTest {
 
+    @BeforeAll
+    static void BeforeAll(){
+        Configuration.browserSize = "1920x1080";
+            }
+
     @ValueSource(strings = {
-            "Selenide",
-            "JUnit"
+            "Alexander",
+            "Alena"
     })
-    @ParameterizedTest(name = "Проверка поиска в яндексе по слову {0}")
+    @ParameterizedTest(name = "Заполнение формы имя {0}")
     void yaSearchTest(String testData) {
 //        Предусловия:
-        Selenide.open("https://ya.ru");
+        Selenide.open("https://demoqa.com/text-box");
 //        Шаги:
-        $("#text").setValue(testData);
-        $("button[type='submit']").click();
+        $("#userName").setValue(testData);
+        $("#submit").click();
 //        Ожидаемый результат:
-        $$(".serp-item")
-                .find(Condition.text(testData))
-                .shouldBe(visible);
+        $("#output").shouldHave(text(testData));
     }
 
     @CsvSource(value = {
-            "Selenide, is an open source library for test",
-            "JUnit, Support JUnit"
+            "Alexander, example@mail.ru,",
+            "JUnit, example2@mail.ru,"
     })
-    @ParameterizedTest(name = "Проверка поиска в яндексе по слову {0}, ожидаем результат: {1}")
-    void yaSearchComplexTest(String testData, String expectedResult) {
+    @ParameterizedTest(name = "Проверка заполнение формы имя {0}, емайл {1}")
+    void yaSearchComplexTest(String testData, String emailData) {
 //        Предусловия:
-        Selenide.open("https://ya.ru");
+        Selenide.open("https://demoqa.com/text-box");
 //        Шаги:
-        $("#text").setValue(testData);
-        $("button[type='submit']").click();
+        $("#userName").setValue(testData);
+        $("#userEmail").setValue(emailData);
+        $("#submit").click();
 //        Ожидаемый результат:
-        $$(".serp-item")
-                .find(Condition.text(expectedResult))
-                .shouldBe(visible);
+        $("#output")
+                .shouldHave(text(testData))
+                .shouldHave(text(emailData));
     }
 
-    static Stream<Arguments> methodSourceExampleTest() {
+    static Stream<Arguments> argumentsForTest() {
         return Stream.of(
-                Arguments.of("first string", List.of(42, 13)),
-                Arguments.of("second string", List.of(1, 2))
+                Arguments.of("example@mail.ru"),
+                Arguments.of("example2@mail.ru")
         );
     }
 
