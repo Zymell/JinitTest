@@ -13,6 +13,8 @@ import static com.codeborne.selenide.Condition.text;
 import static com.codeborne.selenide.Condition.visible;
 import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.$$;
+import static com.codeborne.selenide.files.DownloadActions.click;
+
 import com.codeborne.selenide.Configuration;
 import com.codeborne.selenide.Selenide;
 
@@ -20,9 +22,9 @@ import com.codeborne.selenide.Selenide;
 public class WebTest {
 
     @BeforeAll
-    static void BeforeAll(){
+    static void BeforeAll() {
         Configuration.browserSize = "1920x1080";
-            }
+    }
 
     @ValueSource(strings = {
             "Alexander",
@@ -57,47 +59,18 @@ public class WebTest {
                 .shouldHave(text(emailData));
     }
 
-    static Stream<Arguments> argumentsForTest() {
+    static Stream<Arguments> methodSourceExampleTest() {
         return Stream.of(
-                Arguments.of("example@mail.ru"),
-                Arguments.of("example2@mail.ru")
+                Arguments.of("example@test.ru"),
+                Arguments.of("example2@test.ru")
         );
     }
 
-    @MethodSource("methodSourceExampleTest")
+    @MethodSource()
     @ParameterizedTest
-    void methodSourceExampleTest(String first, List<Integer> second) {
-        System.out.println(first + " and list: " + second);
-    }
-
-    @EnumSource(MenuItem.class)
-    @ParameterizedTest()
-    void yaSearchMenuTest(MenuItem testData) {
-//        Предусловия:
-        Selenide.open("https://ya.ru");
-//        Шаги:
-        $("#text").setValue("Allure TestOps");
-        $("button[type='submit']").click();
-//        Ожидаемый результат:
-        $$(".navigation__item")
-                .find(Condition.text(testData.rusName))
-                .click();
-
-        System.out.println(MenuItem.IMG.rusName);
-
-        Assertions.assertEquals(
-                2,
-                WebDriverRunner.getWebDriver().getWindowHandles().size()
-        );
-    }
-
-    @AfterEach
-    void close() {
-        Selenide.closeWebDriver();
-    }
-
- @Override
-    public String toString() {
-        return "WebTest{}";
+    void methodSourceExampleTest(String login) {
+        Selenide.open("https://demoqa.com/text-box");
+        $("#userEmail").setValue(login);
+        $("#submit").click();
     }
 }
