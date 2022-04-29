@@ -1,11 +1,11 @@
 package guru.qa.domain;
 
 public enum MenuItem {
-    IMG("Картинки"), VID("Видео");
+    What("What"),Origin ("Origin"),Use("Use");
 
-    public final String rusName;
+    public final String engName;
 
-    MenuItem(String rusName) {
-        this.rusName = rusName;
+    MenuItem(String engName) {
+        this.engName = engName;
     }
 }
